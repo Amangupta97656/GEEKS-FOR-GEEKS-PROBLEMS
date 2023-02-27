@@ -6,7 +6,6 @@ class Solution{
         for(int i=0; i<=arr.length-1;i++)
 
         {
-
             pq.add(arr[i]);
 
             if(pq.size()>k)
