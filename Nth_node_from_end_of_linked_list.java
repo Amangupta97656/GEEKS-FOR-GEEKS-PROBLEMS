@@ -1,24 +1,23 @@
-class GfG
+class Solution
 {
     //Function to find the data of nth node from the end of a linked list.
     int getNthFromLast(Node head, int n)
     {
-         int size=0;
-        Node temp = head;
-        while(temp != null)
-        {
-            size++;
-            temp = temp.next;
+    	// Your code here
+    	int len=0;
+    	Node temp=head;
+    	while(temp!=null){
+    	    len++;
+    	    temp=temp.next;
+    	}
+    	if(n>len)return -1;
+    	
+        temp=head;
+        int ind=1;
+        while(ind<=len && ind!=len-(n-1)){
+            temp=temp.next;
+            ind++;
         }
-        if(size<n)
-            return -1;
-        
-        int reqElePos = size-n;
-        Node reqEle = head;
-        for(int i=0;i<reqElePos;i++)
-        {
-            reqEle = reqEle.next;
-        }
-        return reqEle.data;
+    	return temp.data;
     }
 }
