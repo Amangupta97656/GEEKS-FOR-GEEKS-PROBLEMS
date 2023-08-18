@@ -1,29 +1,18 @@
 class Solution{
     //Function to find the leaders in the array.
     static ArrayList<Integer> leaders(int arr[], int n){
-           ArrayList<Integer> list=new ArrayList<>();
-
-        int maxi=arr[n-1];
-
-        list.add(maxi);
-
-        for(int i=n-2;i>=0;i--){
-
-            if(arr[i]>=maxi){
-
-                list.add(arr[i]);
-
-                maxi=arr[i];
-
+        // Your code here
+        int min=Integer.MIN_VALUE;
+        ArrayList<Integer> ans=new ArrayList<Integer>();
+        for(int i=n-1;i>=0;i--)
+        {
+            if(arr[i]>=min)
+            {
+                min=arr[i];
+                ans.add(min);
             }
-
         }
-
-        Collections.reverse(list);
-
-        return list;
-
+        Collections.reverse(ans);
+        return ans;
     }
-
 }
-
