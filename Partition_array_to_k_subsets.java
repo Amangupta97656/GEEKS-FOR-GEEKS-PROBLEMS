@@ -1,33 +1,91 @@
-class Solution{
-    
-    bool solve(int s, int *a, int n, int sum, int k, vector<int> &vis){
-        if(!k)return true; // base case, ki required set sab ban gaye
-        
-        for(int i=0;i<n;i++){
-            if(vis[i])continue;  // agar element visited hai to aage badh jao
-            if(s+a[i]==sum) {  // agar ban gya set to k-1 karke next set dekho
-                vis[i]=1;      // visited kardo is position ko 
-                if(solve(0, a, n, sum, k-1, vis))return true; // sum 0 karke aage jao
-                vis[i]=0;      // backtracking
-            }
-            else if(s + a[i] < sum){  // agar abhi bhi sum nahi bana
-                vis[i]=1;             // to dekhte raho aage 
-                if(solve(s + a[i], a, n, sum, k, vis))return true; 
-                vis[i]=0;  // backtracking
-            }
-        }
-        
-        return false;  
-        
-    }
-  public:
-    bool isKPartitionPossible(int a[], int n, int k)
+class Solution
+
+{
+
+    public int partition(int n,int a[],int i,int mask,int tar,int target,int dp[][][])
+
     {
-        int sum=0;
-        for(int i=0;i<n;i++)sum+=a[i];
-        vector<int> arr(n); // ek array maintain karenge, ki is postition wale element 
-                            // ko choose kiya ya nahi
-        if(sum%k)return false;   // agar sum possible hai hi nhi to false return kardo
-        else return solve(0, a, n, sum/k, k, arr);
+
+        if(tar<0)
+
+        return 0;
+
+        if(i==n)
+
+        {
+
+            if(tar>0)
+
+            return 0;
+
+            if(tar==0)
+
+            {
+
+                if(mask==((1<<n)-1))
+
+                return 1;
+
+                return partition(n,a,0,mask,target,target,dp);
+
+            }
+
+        }
+
+        if(dp[i][mask][tar]!=-1)
+
+        return dp[i][mask][tar];
+
+        int x=0,y=0;
+
+        if(!(((1<<i) & mask)>0))
+
+            x=partition(n,a,i+1,(1<<i) ^ mask,tar-a[i],target,dp);
+
+        y=partition(n,a,i+1,mask,tar,target,dp);
+
+        return dp[i][mask][tar]=(x | y);
+
     }
-};
+
+    public boolean isKPartitionPossible(int a[], int n, int k)
+
+    {
+
+        int sum=0;
+
+        for(int i=0;i<n;i++)
+
+        sum+=a[i];
+
+        if(sum%k!=0)
+
+        return false;
+
+        int dp[][][]=new int[n][1<<n][(sum/k)+1];
+
+        for(int i=0;i<n;i++)
+
+        {
+
+            for(int j=0;j<(1<<n);j++)
+
+            Arrays.fill(dp[i][j],-1);
+
+        }
+
+        int z=partition(n,a,0,0,sum/k,sum/k,dp);
+
+        if(z==1)
+
+        return true;
+
+        return false;
+
+ // Your code here 
+
+    }
+
+}
+
+ 
