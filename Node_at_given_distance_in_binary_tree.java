@@ -1,57 +1,69 @@
+
 class Solution
 {
-
-  // finding reference of target node
-    private static Node findNode(Node root, int target){
-        if(root==null) return null;
-        if(root.data==target) return root;
-        Node left=findNode(root.left,target);
-        Node right=findNode(root.right,target);
-        if(left!=null) return left;
-        if(right!=null) return right;
-        return null;
+    public static Node SearchTarget(Node root,int val){
+        if(root==null)return null;
+        if(root.data==val)return root;
+        Node left=SearchTarget(root.left,val);
+        Node right=SearchTarget(root.right,val);
+        if(left==null)return right;
+        return left;
     }
-
-// store parent node for all nodes into the map
-    private static void findParent(HashMap<Node,Node> parentMap,Node root){
-        if(root==null) return;
-        if(root.left!=null) parentMap.put(root.left,root);
-        if(root.right!=null) parentMap.put(root.right,root);
-        
-        findParent(parentMap,root.left);
-        findParent(parentMap,root.right);
-    }
-    
     public static ArrayList<Integer> KDistanceNodes(Node root, int target , int k)
     {
-        ArrayList<Integer> res=new ArrayList<>();
-        HashMap<Node,Node> parentMap=new HashMap<>();
-        if(root==null) return res;
-        findParent(parentMap,root);
-        Queue<Node> q=new LinkedList<>();
-        Node targetNode=findNode(root,target);
-        HashSet<Node> visited=new HashSet<>();
-        q.offer(targetNode);
-        
-        while(!q.isEmpty()){
-            int size=q.size();
-            for(int i=0;i<size;i++){
-                Node node=q.poll();
-                visited.add(node);
-                
-                if(k==0) res.add(node.data);
-                
-                if(parentMap.containsKey(node) && !visited.contains(parentMap.get(node))){
-                    q.offer(parentMap.get(node));
-                }
-                if(node.left!=null && !visited.contains(node.left)) q.offer(node.left);
-                if(node.right!=null && !visited.contains(node.right)) q.offer(node.right);
-                
+        // return the sorted list of all nodes at k dist
+        HashMap<Node,Node>mp=new HashMap<>();
+        Queue<Node>q=new LinkedList<>();
+        q.add(root);
+        while(q.size()!=0){
+            Node temp=q.remove();
+            if(temp.left!=null){
+                mp.put(temp.left,temp);
+                q.add(temp.left);
             }
-            k--;
-            if(k<0) break;
+            if(temp.right!=null){
+                mp.put(temp.right,temp);
+                q.add(temp.right);
+            }
         }
-        Collections.sort(res);
-        return res;
+        ArrayList<Integer>ans=new ArrayList<>();
+        HashMap<Node,Integer>isVisit=new HashMap<>();
+        Queue<Node>q1=new LinkedList<>();
+        Node node=SearchTarget(root,target);
+        q1.add(node);
+        isVisit.put(node,0);
+        while(q1.size()!=0){
+            Node temp=q1.poll();
+            
+            if(temp.left!=null && !isVisit.containsKey(temp.left)){
+                Node left=temp.left;
+                q1.add(left);
+                isVisit.put(left,isVisit.get(temp)+1);
+                if(isVisit.get(left)==k){
+                    ans.add(left.data);
+                }
+            }
+            
+            if(temp.right!=null && !isVisit.containsKey(temp.right)){
+                Node right=temp.right;
+                q1.add(right);
+                isVisit.put(right,isVisit.get(temp)+1);
+                if(isVisit.get(right)==k){
+                    ans.add(right.data);
+                }
+            }
+            
+            if(mp.containsKey(temp) && !isVisit.containsKey(mp.get(temp))){
+                Node parent=mp.get(temp);
+                q1.add(parent);
+                isVisit.put(parent,isVisit.get(temp)+1);
+                if(isVisit.get(parent)==k){
+                    ans.add(parent.data);
+                }
+            }
+            
+        }
+        Collections.sort(ans);
+        return ans;
     }
 };
