@@ -1,101 +1,130 @@
-
-class Solution
-{
-   static Node removeLeadingZeros(Node a)
-   {
-       if (a != null && a.data == 0)
-           return removeLeadingZeros(a.next);
-       else
-           return a;
-   }
-    static Node reverse(Node head)
+class Solution {
+    private int length(Node head)
     {
-        if(head == null || head.next == null)
-            return head; 
-        Node prev = null;
-        Node temp = null;
-        while(head!=null)
+        Node temp = head;
+        int len = 0;
+        while(temp != null)
         {
-            temp = head.next;
-            head.next = prev;
-            prev = head;
-            head = temp;
+            len ++;
+            temp = temp.next;
         }
-        return prev;
+        return len;
     }
-    static int getSize(Node head)
+    private boolean isSwapForBigger(Node head1, Node head2)
     {
-        int size = 0;
-        while(head!=null)
+        int len1 = length(head1);
+        int len2 = length(head2);
+        if(len1 > len2)
+            return false;
+        if(len1 < len2)
+            return true;
+        while(head1 != null)
         {
-            size++;
-            head = head.next;
-        }
-        return size;
-    }
-    static Node subLinkedList(Node l1, Node l2)
-    {
-        l1 = removeLeadingZeros(l1);
-        l2 = removeLeadingZeros(l2);
-        int s1 = getSize(l1);
-        int s2 = getSize(l2);
-        if(s1 < s2)
-        {
-            Node temp = l1;
-            l1 = l2;
-            l2 = temp;
-        }
-        else if(s1 == s2)
-        {
-            Node p1 = l1;
-            Node p2 = l2;
-            while(p1!=null && p1.data == p2.data)
+            if(head1.data == head2.data)
             {
-                p1 = p1.next;
-                p2 = p2.next;
-            }
-            if(p1 != null && p1.data < p2.data)
-            {
-                    Node temp = l1;
-                    l1 = l2;
-                    l2 = temp;
-            }
-        }
-        l1 = reverse(l1);
-        l2 = reverse(l2);
-        Node dummy = new Node(-1);
-        Node itr = dummy;
-        Node c1 = l1;
-        Node c2 = l2;
-        int borrow = 0;
-        while(c1!=null)
-        {
-            int diff = borrow + c1.data - ((c2!=null)?c2.data:0);
-            if(diff < 0)
-            {
-                diff = diff+10;
-                borrow = -1;
-            }
-            else
-            {
-                borrow = 0;
-            }
-            if(diff == 0 && c1.next ==null)
-            {
-                c1 = c1.next;
+                head1 = head1.next;
+                head2 = head2.next;
                 continue;
             }
-            itr.next = new Node(diff);
-            itr = itr.next;
-            c1 = c1.next;
-            if(c2!=null)
-            {
-                c2 = c2.next;
-            }
+            return head1.data < head2.data;
         }
-        dummy = reverse(dummy.next);
-        while(dummy.data == 0 && dummy.next!=null)
-            dummy = dummy.next;
-        return dummy;
+        return false;
+    }
+    private Node reverse(Node head)
+    {
+        Node pre = null;
+        Node curr = head;
+        if(curr == null)
+            return null;
+        Node nexty = head.next;
+        while(nexty != null)
+        {
+            curr.next = pre;
+            pre = curr;
+            curr = nexty;
+            nexty = nexty.next;
+        }
+        curr.next = pre;
+        return curr;
+    }
+    public Node subLinkedList(Node head1, Node head2) {
+        //  ELEMENT ZEROS
+        while(head1.next != null && head1.data == 0)
+            head1 = head1.next;
+        while(head2.next != null && head2.data == 0)
+            head2 = head2.next;
+            
+        // FIND BIGGER
+        if(isSwapForBigger(head1, head2))
+        {
+            Node head = head1;
+            head1 = head2;
+            head2 = head;
+        }
+        
+        head1 = reverse(head1);
+        head2 = reverse(head2);
+        
+        Node head = new Node(-1);
+        Node tail = head;
+        
+        Node temp1 = head1, temp2 = head2;
+        int borrow = 0;
+        
+        while(temp1 != null && temp2 != null)
+        {
+            
+            int data = temp1.data - borrow - temp2.data;
+            if(data < 0)
+            {
+                data += 10;
+                borrow = 1;
+            }else{
+                borrow = 0;
+            }
+            Node curr = new Node(data);
+            tail.next = curr;
+            tail = curr;
+            temp1 = temp1.next;
+            temp2 = temp2.next;
+        }
+        while(temp1 != null)
+        {
+            int data = temp1.data - borrow;
+            if(data < 0)
+            {
+                data += 10;
+                borrow = 1;
+            }else{
+                borrow = 0;
+            }
+            Node curr = new Node(data);
+            tail.next = curr;
+            tail = curr;
+            temp1 = temp1.next;
+        }
+        while(temp2 != null)
+        {
+            int data = temp2.data - borrow;
+            if(data < 0)
+            {
+                data += 10;
+                borrow = 1;
+            }else{
+                borrow = 0;
+            }
+            Node curr = new Node(data);
+            tail.next = curr;
+            tail = curr;
+            temp2 = temp2.next;
+        }
+        head = head.next;
+        head = reverse(head);
+        
+        //  ELEMENT ZEROS
+        while(head.next != null && head.data == 0)
+            head = head.next;
+            
+        return head;
     }
 }
