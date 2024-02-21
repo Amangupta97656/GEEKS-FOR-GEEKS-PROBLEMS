@@ -1,70 +1,46 @@
 class Solution{
-    static int countWays(int N, String S)
-    {
-        Map<String,Integer> dp=new HashMap<>();
-        
-        return BooleanParenthesis(S,0,S.length()-1,true,dp)%1003;
+    static int mod=1003;
+    static class pair{
+        int f;
+        int s;
+        pair(int f,int s){
+            this.f=f;
+            this.s=s;
+        }
     }
-    public static int BooleanParenthesis(String s,int i,int j,boolean toFind,Map<String,Integer> dp)
-    {
-        
-        String key=i+"-"+j+"-"+toFind;
-        
-        if(dp.containsKey(key))
-        {
-            return dp.get(key);
+    static pair solve(int l,int r,String s,pair dp[][]){
+        if(l==r){
+            if(s.charAt(l)=='T')return new pair(1,0);
+            else return new pair(0,1);
         }
-        
-        if(i==j)
-        {
-            if(toFind==true)
-            return s.charAt(i)=='T'?1:0;
-            else
-            return s.charAt(i)=='F'?1:0;
+        if(dp[l][r]!=null)return dp[l][r];
+        int first=0;
+        int second=0;
+        for(int i=l+1;i<r;i++){
+            if(s.charAt(i)=='T' || s.charAt(i)=='F')continue;
+            
+            pair left=solve(l,i-1,s,dp);
+            pair right=solve(i+1,r,s,dp);
+            
+            if(s.charAt(i)=='|'){
+                first=(first+(left.f*right.f)+(left.f*right.s)+(left.s*right.f))%mod;
+                second=(second+(left.s*right.s))%mod;
+            }else if(s.charAt(i)=='&'){
+                first=(first+(left.f*right.f))%mod;
+                second=(second+(left.s*right.s)+(left.f*right.s)+(left.s*right.f))%mod;
+            }else if(s.charAt(i)=='^'){
+                first=(first+(left.f*right.s)+(left.s*right.f))%mod;
+                second=(second+(left.s*right.s)+(left.f*right.f))%mod;
+            }
+            
         }
-        
-        int count=0;
-        
-        for(int k=i+1;k<=j-1;k+=2)
-        {
-            char operator=s.charAt(k);
-        int leftTrue=BooleanParenthesis(s,i,k-1,true,dp)%1003;
-        int leftFalse=BooleanParenthesis(s,i,k-1,false,dp)%1003;
-        int rightTrue=BooleanParenthesis(s,k+1,j,true,dp)%1003;
-        int rightFalse=BooleanParenthesis(s,k+1,j,false,dp)%1003;
-            count+=Evaluate(operator,leftTrue,leftFalse,rightTrue,rightFalse,toFind)%1003;
-        }
-        dp.put(key,count);
-        return count%1003;
+        return dp[l][r]=new pair(first,second);
     }
-    
-    public static int Evaluate(char op,int leftTrue,int leftFalse,int rightTrue,int rightFalse,boolean toFind)
-    {
-        int ans=0;
-        if(op=='^')
-        {
-            if(toFind==true)
-         ans=(leftFalse*rightTrue)+(leftTrue*rightFalse);
-         else
-         ans=(leftTrue*rightTrue)+(leftFalse*rightFalse);
-        }
-        else if(op=='&')
-        {
-            if(toFind==true)
-            ans=(leftTrue*rightTrue);
-            else
-            ans=(leftTrue*rightFalse)+(leftFalse*rightTrue)+(leftFalse*rightFalse);
-        }
-        else
-        {
-            if(toFind==true)
-            ans=(leftFalse*rightTrue)+(leftTrue*rightFalse)+(leftTrue*rightTrue);
-            else
-            ans=(leftFalse*rightFalse);
-        }
-        return ans%1003;
+    static int countWays(int n, String s){
+        int ans[]=new int[1];
+        pair dp[][]=new pair[n][n];
+        //for(row[]:dp)Arrays.fill(row,-1);
+        return solve(0,n-1,s,dp).f;
     }
-    
-    
-    
 }
+
