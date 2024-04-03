@@ -1,6 +1,6 @@
 class Solution 
 { 
-    //Function to return max ' value that can be put in knapsack of capacity W.
+      //Function to return max ' value that can be put in knapsack of capacity W.
     static int knapSack(int W, int wt[], int val[], int n) 
     { 
          int[][] dp = new int[n+1][W+1];
