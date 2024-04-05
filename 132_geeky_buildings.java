@@ -3,11 +3,13 @@ class Solution{
    static boolean recreationalSpot(int[] nums , int n){
        return find(nums,0);
    }
+   
    public static boolean find(int[] nums,int n) {
        if(nums.length-n<3) return false;
        if(call(nums,n)){
            return true;
        }
+      
        max=Math.max(max,nums[n]);
        while(nums.length-n>=3){
            if(nums[n+1]>max){
