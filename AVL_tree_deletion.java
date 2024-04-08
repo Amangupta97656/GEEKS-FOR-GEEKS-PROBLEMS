@@ -4,12 +4,14 @@ class Sol {
             return 0;
         return node.height;
     }
+    
 
     static int getBalance(Node node) {
         if (node == null)
             return 0;
         return height(node.left) - height(node.right);
     }
+    
 
     static Node rightRotate(Node y) {
         Node x = y.left;
