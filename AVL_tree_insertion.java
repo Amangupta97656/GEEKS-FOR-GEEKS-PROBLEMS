@@ -10,6 +10,9 @@ class Solution
         if(data < node.data){
             node.left =insertToAVL(node.left, data);
         }
+
+
+            
         else if(data > node.data){
             node.right =insertToAVL(node.right, data);
         }
