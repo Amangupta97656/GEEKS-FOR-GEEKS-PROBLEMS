@@ -1,45 +1,67 @@
 class Solution{
-    //Function to add two numbers represented by linked list.
-    static Node addTwoLists(Node first, Node second){
-        // code here
-        // return head of sum list
-        Node temp1 = reverseFun(first);
-        Node temp2 = reverseFun(second);
-        
-        Node node1 = new Node(0);
-        Node node2 = node1;
-        int carry = 0;
-        while(temp1 != null || temp2 != null){
-            int num1 = (temp1 != null) ? temp1.data : 0;
-            int num2 = (temp2 != null) ? temp2.data : 0;
-            int sum = carry + num1 + num2;
-            carry = sum  / 10;
-            node2.next = new Node(sum % 10);
-            node2 = node2.next;
-            if(temp1 != null)
-                temp1 = temp1.next;
-            
-            if(temp2 != null)
-                temp2 = temp2.next;
-        }
-        if(carry > 0)
-            node2.next = new Node(carry);
-            
-            Node result = reverseFun(node1.next);
-            
-            return result;
-    }
     
-    static Node reverseFun(Node head){
-        Node current = head;
-        Node prevs = null;
-        Node nextNode = null;
-        while(current != null){
-            nextNode = current.next;
-            current.next = prevs;
-            prevs = current;
-            current = nextNode;
+    static Node addTwoLists(Node num1, Node num2){
+
+        Node a = reverse(num1);
+        Node b = reverse(num2);
+        
+        Node temp = new Node(0);
+        Node ans = temp;
+        
+        int carry = 0;
+        while(a!=null && b!=null){
+            int val = a.data + b.data + carry;
+            Node node = new Node((val%10));
+            temp.next = node;
+            temp = temp.next;
+            carry = val/10;
+            
+            a = a.next;
+            b = b.next;
         }
-        return prevs;
+        while(a!=null){
+            int val = a.data + carry;
+            Node node = new Node((val%10));
+            temp.next = node;
+            temp = temp.next;
+            carry = val/10;
+            
+            a = a.next;
+        }
+        while(b!=null){
+            int val = b.data + carry;
+            Node node = new Node((val%10));
+            temp.next = node;
+            temp = temp.next;
+            carry = val/10;
+            
+            b = b.next;
+        }
+        Node node = new Node(carry);
+        temp.next = node;
+        ans = ans.next;
+        Node p = reverse(ans);
+        
+        while(p.data==0 && p.next!=null){
+            p = p.next;
+        }
+        
+        return p;
+    }
+    public static Node reverse(Node start){
+        Node prev = start;
+        Node curr = start.next;
+        
+        prev.next = null;
+        
+        while(curr!=null){
+            Node temp = curr.next;
+            
+            curr.next = prev;
+            
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
     }
 }
