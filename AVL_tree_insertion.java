@@ -1,4 +1,6 @@
 
+
+
 class Solution
 {
     public  Node insertToAVL(Node node,int data)
