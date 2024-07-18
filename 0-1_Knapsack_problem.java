@@ -9,8 +9,6 @@ class Solution
 
                   dp[i][j] = -1;
             }
-
-              
         }
         
         return knapSackRecursive(W, wt, val, n, dp);
