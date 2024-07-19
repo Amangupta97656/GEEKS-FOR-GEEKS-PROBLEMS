@@ -1,35 +1,29 @@
 class Solution {
-    int[] constructLowerArray(int[] a, int n) {
-        // code here
-        int ans[]=new int[n];
-        int x=n-2;
-        List<Integer> arr=new ArrayList<>();
-        arr.add(a[n-1]);
-        for(int i=n-2;i>=0;i--)
-        {
-            int idx=dfs(arr,a[i],0,arr.size()-1);
-            arr.add(idx,a[i]);
-            ans[x]=idx;
-            x--;
-            
-        }
-        return ans;
+    public List<Integer> luckyNumbers (int[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
         
-    }
-    int dfs(List<Integer>arr, int key,int l,int h)
-    {
-        if(l<=h)
-        {
-            int mid=l+(h-l)/2;
-            if(arr.get(mid)>=key)
-            {
-                return dfs(arr,key,l,mid-1);
-            }
-            else
-            {
-               return  dfs(arr,key,mid+1,h);
+        int[] row_minimums = new int[rows];
+        Arrays.fill(row_minimums, Integer.MAX_VALUE);
+        int[] col_maximums = new int[cols];
+        
+        for (int row_ind = 0; row_ind < rows; ++row_ind) {
+            for (int col_ind = 0; col_ind < cols; ++col_ind) {
+                int el = matrix[row_ind][col_ind];
+                row_minimums[row_ind] = Math.min(row_minimums[row_ind], el);
+                col_maximums[col_ind] = Math.max(col_maximums[col_ind], el);
             }
         }
-        return l;
+        
+        for (int row_ind = 0; row_ind < rows; ++row_ind) {
+            for (int col_ind = 0; col_ind < cols; ++col_ind) {
+                int el = matrix[row_ind][col_ind];
+                if (el == row_minimums[row_ind] && el == col_maximums[col_ind]) {
+                    return Collections.singletonList(el);
+                }
+            }
+        }
+        
+        return Collections.emptyList();
     }
 }
