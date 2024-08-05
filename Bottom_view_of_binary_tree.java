@@ -1,22 +1,39 @@
-class Solution {
-    
-   public ArrayList <Integer> bottomView(Node root)
+class Solution
+{
+    static class pair{
+        Node node;
+        int level;
+        public pair(Node node,int level){
+            this.node=node;
+            this.level=level;
+        }
+    }
+    //Function to return a list containing the bottom view of the given tree.
+    public ArrayList <Integer> bottomView(Node root)
     {
         // Code here
+        int leftMost=0;
+        HashMap<Integer,Integer> mp=new HashMap<>();
+        Queue<pair> q=new LinkedList<>();
+        q.offer(new pair(root,0));
+        while(!q.isEmpty()){
+            pair p=q.poll();
+            Node temp=p.node;
+            int lvl=p.level;
+            mp.put(lvl,temp.data);
+            leftMost=Math.min(leftMost,lvl);
+            if(temp.left!=null){
+                q.offer(new pair(temp.left,lvl-1));
+            }
+            if(temp.right!=null){
+                q.offer(new pair(temp.right,lvl+1));
+            }
+        }
         ArrayList<Integer> ans=new ArrayList<>();
-        TreeMap<Integer,int[]> hm=new TreeMap<>();
-        help(root,0,0,hm);
-        for(var i:hm.entrySet()){
-            ans.add(i.getValue()[0]);
+        while(mp.containsKey(leftMost)){
+            ans.add(mp.get(leftMost));
+            leftMost++;
         }
         return ans;
-        
-        
-    }
-    public void help(Node root,int level,int verlevel,TreeMap<Integer,int[]> hm){
-        if(root==null)return;
-        if(!hm.containsKey(verlevel)||hm.get(verlevel)[1]<=level)hm.put(verlevel,new int[]{root.data,level});
-        help(root.left,level+1,verlevel-1,hm);
-        help(root.right,level+1,verlevel+1,hm);
     }
 }
