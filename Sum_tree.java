@@ -1,22 +1,20 @@
-class Solution
-{
-    boolean isSumTree(Node root)
-    {
-             // Your code here
-             if(root == null)return true;
-             if(root.left == null && root.right == null)return true;
-             boolean l = isSumTree(root.left);
-             boolean r = isSumTree(root.right);
-             int le = 0;
-             int ri = 0;
-             if(root.left!= null)le = root.left.data;
-             if(root.right != null)ri = root.right.data;
-             boolean res = (le+ri == root.data);
-             if(l && r && res){
-                 root.data += le+ri;
-                 return true;
-             }
-             else return false;
+class Solution {
+    boolean isSumTree(Node root) {
+        // Your code here
+        if(root == null || (root.left == null && root.right == null))
+            return true;
+        int ls = findSum(root.left);
+        int rs = findSum(root.right);
+        if(ls + rs == root.data){
+            if(isSumTree(root.left) && isSumTree(root.right))
+                return true;
+        }
+        return false;
+    }
+    
+    int findSum(Node root){
+        if(root == null)
+            return 0;
+        return root.data + findSum(root.left) + findSum(root.right);
     }
 }
-
