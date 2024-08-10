@@ -1,26 +1,40 @@
-class Solution{
-    //Function to rotate a linked list.
+class Solution {
+    // Function to rotate a linked list.
+    int count=0;
+    Node p=null;
+    Node l=null;
+    Node q=null;
+    
     public Node rotate(Node head, int k) {
-        if(head==null || head.next==null){
-            return head;
+       
+        //base case
+        if(count==0){
+            p=head;
         }
-        
-        Node mark=null;
-        Node head1=head;
-        while(head1.next!=null){
-            k--;
-            if(k==0){
-                mark=head1;
+        //base case according to recursion
+        if(head.next==null){
+            if(count==k){
+                head.next=p;
+                l.next=null;
+                return head;
+            }else if(k>count){
+                return p;
             }
-            head1=head1.next;
+            head.next=p;
+           l.next=null;
+            return q;
         }
-        if(k>0 || mark==head1){
-            return head;
+        //according to condition
+        if(count==k-1){
+           l=head;
+       }
+        //according to condition
+        if(count==k){
+            q=head;
         }
-        
-        head1.next=head;
-        Node n=mark.next;
-        mark.next=null;
-        return n;
+            count++;
+            //recursion call
+            return rotate(head.next,k);
     }
+      
 }
