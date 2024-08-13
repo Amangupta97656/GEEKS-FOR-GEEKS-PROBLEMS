@@ -1,3 +1,4 @@
+
 class Solution{
    static int max=Integer.MIN_VALUE;
    static boolean recreationalSpot(int[] nums , int n){
