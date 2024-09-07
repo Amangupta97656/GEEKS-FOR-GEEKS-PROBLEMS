@@ -1,13 +1,14 @@
 class Solution {
-    long findNth(long N)
-    {
-       long count=0;
-    long P = 1;
-    while(N>0){
-        count+=(P*(N%9));
-        N=N/9;
-        P=P*10;
-    }
-    return count;
+     long findNth(long n) {
+        // code here
+        long res=0;
+        int p=1;
+        while(n>0){
+           
+            res+=((int)n%9)*p;
+            n/=9;
+            p*=10;
+        }
+        return res;
     }
 }
