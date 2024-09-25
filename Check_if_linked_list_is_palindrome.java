@@ -1,19 +1,22 @@
-class Solution
-{
-    boolean isPalindrome(Node head) 
-    {
-        List<Integer> l = new ArrayList<>();
-        Node temp = head;
-        while(temp!= null){
-            l.add(temp.data);
-            temp = temp.next;
+class Solution {
+    boolean isPalindrome(Node head) {
+        if (head == null || head.next == null) return true; 
+        Node slow = head, fast = head;
+        LinkedList<Integer> stack = new LinkedList<>();
+        while (fast != null && fast.next != null) {
+            stack.push(slow.data); 
+            slow = slow.next;
+            fast = fast.next.next;
         }
-        int n = l.size()-1;
-        for(int i = 0; i< l.size(); i++){
-            if(l.get(i) != l.get(n-i)){
+        if (fast != null) {
+            slow = slow.next;
+        }
+        while (slow != null) {
+            if (stack.pop() != slow.data) {
                 return false;
             }
+            slow = slow.next;
         }
         return true;
-    }    
+    }
 }
