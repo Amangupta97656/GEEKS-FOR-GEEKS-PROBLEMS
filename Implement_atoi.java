@@ -1,15 +1,23 @@
-
-class Solution
-{   
-      int atoi(String s) {
-            boolean minus = s.charAt(0) == '-' ? true : false;
-            int start = s.charAt(0) == '-' ? 1 : 0;
-            int result = 0;
-            for(int i = start ; i<s.length() ; i++) {
-                 if(s.charAt(i) + '0' > 115 || s.charAt(s.length()-1) == '-') return -1;
-                         int val = ('0' - ('a' - s.charAt(i))) + 1;
-                         result = result * 10 + val;
-             }
-        return minus == true ? (-1 * result ) : result ;
+class Solution {
+    public int myAtoi(String s) {
+        // Your code here
+        int flag=0,sign=0;
+        long no=0;
+        long check=(long)2147483648L;
+        for(char c:s.toCharArray()){
+            
+            if(flag==0 && (c==' ' || c=='0')){ continue;}
+            if(flag==0 && c=='+') sign=1;
+            else if(flag==0 && c=='-') sign=-1;
+            else if(c-'0'<=9 && c-'0'>=0) {
+                flag=1;
+                no=no*10+(int)(c-'0');}
+            else  break;
+            
+        }
+        if((sign==1 || sign==0) && no>=check ) return (int)check-1;
+        else if(sign==-1 && no>check) return (int)check*-1;
+        if(sign==-1) return (int)no*-1;
+        return (int)no;
     }
 }
