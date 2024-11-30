@@ -1,32 +1,18 @@
-class Solution
-{    
-    //Function is to check whether two strings are anagram of each other or not.
-    public static boolean isAnagram(String a,String b)
-    {
-  boolean flag = false;
-        int l1 = a.length();
-        int l2 = b.length();
-        if(l1!=l2){
-            return false;
+class Solution {
+    // Function is to check whether two strings are anagram of each other or not.
+    public static boolean areAnagrams(String s1, String s2) {
+        // Your code here
+        if(s1.length()!=s2.length()) return false;
+        int alpha[] = new int[26];
+        for(int i = 0; i<s1.length(); i++){
+            alpha[s1.charAt(i)-(int)'a']++;
         }
-        char c1[] = a.toCharArray();
-        char c2[] = b.toCharArray();
-        Arrays.sort(c1);
-        Arrays.sort(c2);
-        a = new String(c1);
-        b = new String(c2);
-        for(int i = 0;i<l1;i++){
-            if(a.charAt(i)==b.charAt(i)){
-                flag = true;
-            }
-            else{
-                flag = false;
-                break;
-            }
+        for(int i = 0; i<s2.length(); i++){
+            alpha[s2.charAt(i)-(int)'a']--;
         }
-        if(flag==true){
-            return true;
+        for(int i = 0; i<alpha.length; i++){
+            if(alpha[i]!=0) return false;
         }
-        return false;
+        return true;
     }
 }
