@@ -1,19 +1,19 @@
 class Solution {
-    public int maxScoreSightseeingPair(int[] values) {
-        int n = values.length;
-        int[] suffixMax = new int[n];
-        suffixMax[n - 1] = values[n - 1] - (n - 1);
-
-        for (int i = n - 2; i >= 0; i--) {
-            suffixMax[i] = Math.max(suffixMax[i + 1], values[i] - i);
+    int countPairs(int arr[], int target) {
+        // Your code here
+        Arrays.sort(arr);
+        int count=0;
+        int st=0;
+        int ed=arr.length-1;
+        while(st<ed){
+            if((arr[st]+arr[ed])<target){
+                count+=ed-st;
+                st++;
+            }
+            else{
+            ed--;
+            }
         }
-
-        int maxScore = Integer.MIN_VALUE;
-
-        for (int i = 0; i < n - 1; i++) {
-            maxScore = Math.max(maxScore, values[i] + i + suffixMax[i + 1]);
-        }
-
-        return maxScore;
+        return count;
     }
 }
