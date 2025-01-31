@@ -1,58 +1,62 @@
-class Solution
+class Solution 
 {
-    public static boolean isSafe(int row, int col, int num, int [][] grid){
-        int N = grid.length;
-        for(int i=0; i<N; i++){
-            if(grid[row][i] == num) return false;
-            if(grid[i][col] == num) return false;
+    // Function to find a solved Sudoku.
+    static void solveSudoku(int[][] mat) 
+    {
+        solve(mat);
+    }
+    // Function to check if placing 'num' at mat[row][col] is valid
+    static boolean isValid(int[][] mat, int row, int col, int num) 
+    {
+        // Check row and column
+        for (int i = 0; i < 9; i++) 
+        {
+            if (mat[row][i] == num || mat[i][col] == num) 
+            {
+                return false;
+            }
         }
-        int sr = (row/3) * 3;
-        int sc = (col/3) * 3;
-        for(int i= sr; i< sr+3; i++){
-            for(int j=sc; j< sc+3; j++){
-                if(grid[i][j] == num) return false;
+        // Check 3x3 sub-grid
+        int startRow = (row / 3) * 3;
+        int startCol = (col / 3) * 3;
+        for (int i = 0; i < 3; i++) 
+        {
+            for (int j = 0; j < 3; j++) 
+            {
+                if (mat[startRow + i][startCol + j] == num) 
+                {
+                    return false;
+                }
             }
         }
         return true;
     }
-    public static boolean solve(int row, int col, int [][] grid){
-        int N = grid.length;
-        if(row == N) return true;
-        int NRow=0, NCol=0;
-        if(col != N-1) {
-            NRow = row;
-            NCol = col + 1;
-        }else {
-            NRow = row + 1;
-            NCol = 0;
-        }
-        if(grid[row][col] == 0){
-            for(int num=1; num<=9; num++){
-                if(isSafe(row, col, num, grid)){
-                    grid[row][col] = num;
-                    if(solve(NRow, NCol, grid)) return true;
-                    grid[row][col] = 0;
+    // Recursive function to solve Sudoku using backtracking
+    static boolean solve(int[][] mat) 
+    {
+        for (int row = 0; row < 9; row++) 
+        {
+            for (int col = 0; col < 9; col++) 
+            {
+                if (mat[row][col] == 0) 
+                {  // Empty cell found
+                    for (int num = 1; num <= 9; num++) 
+                    {
+                        if (isValid(mat, row, col, num)) 
+                        {
+                            mat[row][col] = num; // Place the number
+
+                            if (solve(mat)) 
+                            {  // Recursively try to solve
+                                return true;
+                            }
+                            mat[row][col] = 0; // Backtrack if no solution found
+                        }
+                    }
+                    return false; // If no number fits, return false
                 }
             }
-        }else {
-            if(solve(NRow, NCol, grid)) return true;
         }
-        return false;
-    }
-    //Function to find a solved Sudoku. 
-    static boolean SolveSudoku(int grid[][])
-    {
-        int n = grid.length, m = grid[0].length;
-        return solve(0, 0, grid);
-    }
-    
-    //Function to print grids of the Sudoku.
-    static void printGrid (int grid[][])
-    {
-        int n = grid.length, m= grid[0].length;
-        for(int i=0; i<n; i++){
-            for(int j=0; j<m; j++) System.out.print(grid[i][j]+" ");
-        }
+        return true; 
     }
 }
-
