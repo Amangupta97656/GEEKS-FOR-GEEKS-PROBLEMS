@@ -1,31 +1,46 @@
-class Solution
-{
-    static int idx=0;
-    public static Node build(int s1,int e1,int in[],int pre[]){
+
+class Solution {
+    static int preIndex = 0;
+    
+    public static Node buildTree(int inorder[], int preorder[]) {
+        preIndex = 0; // Reset preIndex for multiple calls
+        return constructTree(inorder, preorder, 0, inorder.length - 1);
+    }
+    
+    private static Node constructTree(int inorder[], int preorder[], int inStart, int inEnd) {
+        if (inStart > inEnd) {
+            return null;
+        }
         
-        if(e1<s1||idx>=in.length) return null;
+        Node root = new Node(preorder[preIndex++]);
         
-        Node newNode=new Node(pre[idx]);
-        idx++;
-        int mid = 0;
+        if (inStart == inEnd) {
+            return root;
+        }
         
-        for(int i=s1;i<=e1;i++){
-            
-            if(in[i]==newNode.data){
-                
-                mid=i;
-                break;
+        int inIndex = search(inorder, inStart, inEnd, root.data);
+        
+        root.left = constructTree(inorder, preorder, inStart, inIndex - 1);
+        root.right = constructTree(inorder, preorder, inIndex + 1, inEnd);
+        
+        return root;
+    }
+    
+    private static int search(int arr[], int start, int end, int value) {
+        for (int i = start; i <= end; i++) {
+            if (arr[i] == value) {
+                return i;
             }
         }
-        newNode.left = build(s1,mid-1,in,pre);
-        
-        newNode.right = build(mid+1,e1,in,pre);
-        
-        return newNode;
+        return -1;
     }
-    public static Node buildTree(int inorder[], int preorder[], int n)
-    {
-        idx=0;
-        return build(0,inorder.length-1,inorder,preorder);
+    
+    public static void printPostorder(Node root) {
+        if (root == null) {
+            return;
+        }
+        printPostorder(root.left);
+        printPostorder(root.right);
+        System.out.print(root.data + " ");
     }
 }
