@@ -1,19 +1,24 @@
-public class Solution
-{
-    //Function to check whether a Binary Tree is BST or not.
-    boolean isBST(Node root)
-    {
-       return check(root,Integer.MIN_VALUE,Integer.MAX_VALUE);
+class Solution {
+    // Function to check whether a Binary Tree is BST or not.
+    boolean isBST(Node root) {
+        // code here.
+        ArrayList<Integer>vt=new ArrayList<>();
+        inorder(root,vt);
+        for(int i=1;i<vt.size();i++)
+        {
+            if(vt.get(i-1)>vt.get(i))
+            {
+                return false;
+            }
+        }
+        return true;
     }
-    public static boolean check(Node root, int min,int max){
-        if(root == null){
-            return true;
-        }
-        
-        if(root.data < min || root.data> max){
-            return false;
-        }
-        
-        return check(root.left,min,root.data-1) && check(root.right,root.data+1,max);
+    public static void inorder(Node root, ArrayList<Integer>vt)
+    {
+        if(root==null)
+        return;
+        inorder(root.left,vt);
+        vt.add(root.data);
+        inorder(root.right,vt);
     }
 }
