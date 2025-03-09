@@ -1,6 +1,5 @@
 
 
-
 class Sol {
     static int height(Node node) {
         if (node == null)
