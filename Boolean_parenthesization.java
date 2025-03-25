@@ -1,46 +1,62 @@
-class Solution{
-    static int mod=1003;
-    static class pair{
-        int f;
-        int s;
-        pair(int f,int s){
-            this.f=f;
-            this.s=s;
-        }
+class Solution {
+    static int countWays(String s) {
+        int n = s.length();
+        memo = new HashMap<>();
+
+        return solve(s,0,n-1,true);
     }
-    static pair solve(int l,int r,String s,pair dp[][]){
-        if(l==r){
-            if(s.charAt(l)=='T')return new pair(1,0);
-            else return new pair(0,1);
-        }
-        if(dp[l][r]!=null)return dp[l][r];
-        int first=0;
-        int second=0;
-        for(int i=l+1;i<r;i++){
-            if(s.charAt(i)=='T' || s.charAt(i)=='F')continue;
-            
-            pair left=solve(l,i-1,s,dp);
-            pair right=solve(i+1,r,s,dp);
-            
-            if(s.charAt(i)=='|'){
-                first=(first+(left.f*right.f)+(left.f*right.s)+(left.s*right.f))%mod;
-                second=(second+(left.s*right.s))%mod;
-            }else if(s.charAt(i)=='&'){
-                first=(first+(left.f*right.f))%mod;
-                second=(second+(left.s*right.s)+(left.f*right.s)+(left.s*right.f))%mod;
-            }else if(s.charAt(i)=='^'){
-                first=(first+(left.f*right.s)+(left.s*right.f))%mod;
-                second=(second+(left.s*right.s)+(left.f*right.f))%mod;
+    
+    static Map<String, Integer> memo ;
+    
+    static int solve(String s, int i, int j, boolean isTrue){
+        if( i>j) return 0;
+        
+        if( i == j){
+            if( isTrue ){
+                if(s.charAt(i) == 'T' ){
+                    return  1;
+                 } else return 0;
+            } else {
+               if(s.charAt(j) == 'F' ){
+                   return 1 ;
+               } else return 0;
             }
-            
         }
-        return dp[l][r]=new pair(first,second);
-    }
-    static int countWays(int n, String s){
-        int ans[]=new int[1];
-        pair dp[][]=new pair[n][n];
-        //for(row[]:dp)Arrays.fill(row,-1);
-        return solve(0,n-1,s,dp).f;
+        
+        String key = i+","+j+","+ isTrue+"";
+        if(memo.containsKey(key)) return memo.get(key);
+        
+        int ans = 0;     
+        
+        for( int k = i+1; k<=j-1; k = k+2 ){
+            int lT = solve(s, i, k-1, true);
+            int lF = solve(s, i, k-1, false);
+            int rT = solve(s, k+1, j, true);
+            int rF = solve(s, k+1, j, false);
+            
+            if( s.charAt(k) == '&' ){
+                if(isTrue) {
+                    ans += (lT*rT);
+                } else{
+                     ans += (lT*rF) + (lF*rT) + (lF*rF);
+                }
+            } else if( s.charAt(k) == '|' ){
+                if(isTrue) {
+                     ans += (lT*rF) + (lF*rT) + (lT*rT);
+                } else{
+                     ans += (lF*rF);
+                }
+            } else if (s.charAt(k) == '^') {
+                if (isTrue) {
+                    ans += (lT * rF) + (lF * rT); 
+                } else {
+                    ans += (lT * rT) + (lF * rF);
+                }
+            }
+        }
+        
+        memo.put(key,ans);
+        return ans;
+        
     }
 }
-
