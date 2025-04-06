@@ -1,33 +1,30 @@
-class Solution
-{
-    //Function to return list containing vertices in Topological order. 
-    static int[] topoSort(int V, ArrayList<ArrayList<Integer>> adj) 
-    {
-  int [] indegree  =new int[V];
-        for(int i=0; i<V;i++){
-            for(var nn:adj.get(i)){
-                indegree[nn]++;
+class Solution {
+    public static void topoSortUtil(ArrayList<ArrayList<Integer>> adj,int crr,boolean[] vis,ArrayList<Integer> list){
+        vis[crr]=true;
+        for(int nighbor : adj.get(crr)){
+            if(!vis[nighbor]){
+                topoSortUtil(adj,nighbor,vis,list);
             }
         }
-        int[] ans = new int[V];
-        int ind =0;
-        Queue<Integer> q = new LinkedList<>();
-        for(int i=0; i<V; i++){
-            if(indegree[i] == 0){
-                q.add(i);
-            }
+        list.add(crr);
+    }
+    public static ArrayList<Integer> topoSort(int V, int[][] edges) {
+       ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+       for(int i=0 ;i<V;i++){
+           adj.add(new ArrayList<>());
+       }
+       for (int[] edge : edges) {
+            adj.get(edge[0]).add(edge[1]);
         }
         
-        while(!q.isEmpty()){
-            int nn =q.poll();
-            ans[ind++] = nn;
-            for(var i:adj.get(nn)){
-                indegree[i] -=1;
-                if(indegree[i] == 0){
-                    q.add(i);
-                }
+        boolean[] vis = new boolean[V];
+        ArrayList<Integer> list = new ArrayList<>();
+        for(int i=0;i<V;i++){
+            if(!vis[i]){
+                topoSortUtil(adj,i,vis,list);
             }
         }
-        return ans;
+         Collections.reverse(list);
+         return list;
     }
 }
