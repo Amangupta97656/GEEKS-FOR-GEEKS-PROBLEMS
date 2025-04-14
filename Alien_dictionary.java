@@ -1,47 +1,61 @@
-class Solution
-{
-    public String findOrder(String [] dict, int N, int K)
-    {
-        // Write your code here
-        ArrayList<ArrayList<Integer>> adj=new ArrayList<>();
-        for(int i=0;i<K;i++)adj.add(new ArrayList<Integer>());
-        for(int i=0;i<N-1;i++)
-        {
-            String s1=dict[i];
-            String s2=dict[i+1];
-            for(int j=0;j<Math.min(s1.length(),s2.length());j++)
-            {
-                if(s1.charAt(j)!=s2.charAt(j))
-                {
-                    adj.get(s1.charAt(j)-97).add(s2.charAt(j)-97);
+class Solution {
+    public String findOrder(String[] words) {
+         Map<Character, Set<Character>> graph = new HashMap<>();
+        Map<Character, Integer> inDegree = new HashMap<>();
+
+        for (String word : words) {
+            for (char c : word.toCharArray()) {
+                graph.putIfAbsent(c, new HashSet<>());
+                inDegree.putIfAbsent(c, 0);
+            }
+        }
+
+        
+        for (int i = 0; i < words.length - 1; i++) {
+            String word1 = words[i];
+            String word2 = words[i + 1];
+
+            if (word1.length() > word2.length() && word1.startsWith(word2)) {
+                return "";
+            }
+
+            for (int j = 0; j < Math.min(word1.length(), word2.length()); j++) {
+                char c1 = word1.charAt(j);
+                char c2 = word2.charAt(j);
+                if (c1 != c2) {
+                    if (!graph.get(c1).contains(c2)) {
+                        graph.get(c1).add(c2);
+                        inDegree.put(c2, inDegree.get(c2) + 1);
+                    }
                     break;
                 }
             }
         }
-       int indegree[]=new int[K];
-       for(ArrayList<Integer> arr: adj)
-       {
-           for(int x: arr)indegree[x]++;
-       }
-       Queue<Integer> q=new LinkedList<>();
-       for(int i=0;i<indegree.length;i++)
-       {
-           if(indegree[i]==0)q.add(i);
-       }
-       StringBuilder ans=new StringBuilder();
-       while(!q.isEmpty())
-       {
-           int temp=q.poll();
-           ans.append((char)(temp+97));
-           for(int x: adj.get(temp))
-           {
-               indegree[x]--;
-               if(indegree[x]==0)
-               {
-                   q.add(x);
-               }
-           }
-       }
-       return ans.toString();
+
+        Queue<Character> queue = new LinkedList<>();
+        for (char c : inDegree.keySet()) {
+            if (inDegree.get(c) == 0) {
+                queue.offer(c);
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+        while (!queue.isEmpty()) {
+            char c = queue.poll();
+            result.append(c);
+            for (char neighbor : graph.get(c)) {
+                inDegree.put(neighbor, inDegree.get(neighbor) - 1);
+                if (inDegree.get(neighbor) == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+
+     
+        if (result.length() < inDegree.size()) {
+            return "";
+        }
+
+        return result.toString();
     }
 }
