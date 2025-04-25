@@ -1,31 +1,18 @@
-class Solution
-{
-    static int majorityElement(int a[], int size)
-    {
-      int c =0;
-        int prev=0;
-        
-        
-        
-        for(int i=0;i<size;i++){
-            if(c==0){
-                prev=a[i];
-            }
-            if(prev==a[i]){
-                c++;
-                
-            }else{
-                c--;
-            }
-        }
-        
-       int count=0;
-       for(int i=0;i<size;i++){
-           if(a[i]==prev)count++;
+class Solution {
+    static int majorityElement(int arr[]) {
+        // code here
+        int n = arr.length;
+        int times=n/2;
+       HashMap<Integer,Integer> hm = new HashMap<>();
+       for(int i : arr)
+       {
+           hm.put(i,hm.getOrDefault(i,0)+1);
        }
-        
-        if(count>size/2)return prev;
-        return -1;
-         
+       for(int i : hm.keySet())
+       {
+           if(hm.get(i)>times)
+           return i;
+       }
+       return -1;
     }
-    }
+}
