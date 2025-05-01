@@ -1,20 +1,13 @@
 class Solution {
-    ArrayList<Long> nthRowOfPascalTriangle(int n) {
-        // code here
-         ArrayList<Long> pre = new ArrayList<>();
-        long mod = 1000000007;
-        for (int i = 0; i < n; i++) {
-            ArrayList<Long> current = new ArrayList<>();
-            for (int j = 0; j < i + 1; j++) {
-                if (j == i | j == 0) {
-                    current.add(1l);
-                } else {
-                    long num = (pre.get(j) + pre.get(j - 1)) % mod;
-                    current.add(num);
-                }
-            }
-            pre = current;
+    ArrayList<Integer> nthRowOfPascalTriangle(int n) {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        int ans = 1;
+        for(int i=1;i<n;i++){
+            ans = ans * (n-i);
+            ans = ans / i;
+            list.add(ans);
         }
-        return pre;
+        return list;
     }
 }
