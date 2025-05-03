@@ -1,74 +1,47 @@
-class Solution
-{
-    Node primeList(Node head){
-        boolean isPrime[] = new boolean[100000];
-
-         Arrays.fill(isPrime, true);
-
-         primeGen(isPrime);
-
-        Node curr =head;
-
-        while(curr != null){
-
-            if(curr.val == 1){
-
-                curr.val = 2;
-
-                curr = curr.next;
-
-                continue;
-
-            }
-
-            
-
-            int x = curr.val;
-
-            int y = curr.val;
-
-            while(!isPrime[x])x--;
-
-            while(!isPrime[y])y++;
-
-            
-
-            if(curr.val - x > y - curr.val){
-
-                curr.val = y;
-
-            }
-
-            else curr.val = x;
-
-            
-
-            curr = curr.next;
-
+class Solution {
+    boolean check(int num,ArrayList<Integer> arr){
+        for(int i=2;i<=Math.sqrt(num);i++){
+            if(num%i==0)return false;
         }
-
-        return head;
-
+        arr.add(num);
+        return true;
+    }
+    
+    int find(int data, ArrayList<Integer> arr) {
+        int l=0;
+        int r=arr.size()-1;
+        while(l<=r) {
+        	int mid=(l+r)>>1;
+        	if(data>arr.get(mid)) {
+        		l=mid+1;
+        	}else {
+        		r=mid-1;
+        	}        	
+        }
+        return r;
+	}
+    
+    Node primeList(Node head) {
+        ArrayList<Integer> arr=new ArrayList<>();        
+        for(int i=2;i<10010;i++) check(i,arr);
+        Node temp=head;
+        while(temp!=null) {  	
+        	int index=find(temp.val,arr);
+        	int k=temp.val;
+        	if(index==-1)temp.val=2;
+        	else if(arr.size()-1==index) {
+        		temp.val=arr.get(index);
+        	}
+        	else {
+        		if(Math.abs(arr.get(index)-k)> Math.abs(arr.get(index+1)-k)){
+        			temp.val=arr.get(index+1);
+        		}else {
+        			temp.val=arr.get(index);
+        		}    		
+        	}        	
+        	temp=temp.next;        	
+        }
+        return head; 
         
-
     }
-
-    void primeGen(boolean isPrime[]){ // Sieve Of Eratosthenes
-
-        for(int i = 2; i * i <= isPrime.length; i++){
-
-            if(isPrime[i] == true){
-
-                for(int j = i + i; j < isPrime.length; j += i){
-
-                    isPrime[j] = false; // mark as not prime
-
-                }
-
-            }
-
-        }
-
-    }
-
 }
