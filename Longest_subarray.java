@@ -1,30 +1,24 @@
 class Solution {
-    public int longestSubarray(int[] arr, int k) {
-        // code here
-        HashMap<Integer, Integer> prefixSumMap = new HashMap<>();
-        int maxLength = 0;
-        int prefixSum = 0;
-
-        for (int i = 0; i < arr.length; i++) {
-            prefixSum += arr[i];
-
-            // Check if the prefix sum equals k
-            if (prefixSum == k) {
-                maxLength = i + 1;
+    static int longestSubarray(int[] arr, int k) {
+        // Code Here
+        Map<Integer,Integer> PrefixMap = new HashMap<>();
+        PrefixMap.put(0,-1);
+        int prefixSum =0,maxLen=0;
+        for(int i=0;i<arr.length;i++)
+        {
+            prefixSum +=(arr[i]>k)?1:-1;
+            if(prefixSum >0)
+            {
+                maxLen = i+1;
+            }else
+            {
+                if(PrefixMap.containsKey(prefixSum -1))
+                {
+                    maxLen = Math.max(maxLen,i-PrefixMap.get(prefixSum -1));
+                }
             }
-
-            // Check if there is a prefix sum such that removing it gives sum k
-            if (prefixSumMap.containsKey(prefixSum - k)) {
-                maxLength = Math.max(maxLength, i - prefixSumMap.get(prefixSum - k));
-            }
-
-            // Add the current prefix sum to the map if it is not already present
-            if (!prefixSumMap.containsKey(prefixSum)) {
-                prefixSumMap.put(prefixSum, i);
-            }
+            PrefixMap.putIfAbsent(prefixSum,i);
         }
-
-        return maxLength;
+        return maxLen;
     }
 }
-
