@@ -1,17 +1,18 @@
 class Solution {
-    public int kthElement(int a[], int b[], int k) {
-        int ai = 0;
-        int bi = 0; 
-        int value = -1;
-        for (int i = 0; i < k; i++) {
-            if (ai < a.length && (bi >= b.length || a[ai] <= b[bi])) {
-                value = a[ai];
-                ai++;
-            } else {
-                value = b[bi];
-                bi++;
+    public int kthSmallest(int[][] matrix, int l) {
+        int n=matrix[0].length;
+        int k=0;
+        int ans[]=new int[n*n];
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                ans[k]=matrix[i][j];
+                k++;
             }
         }
-        return value;
+        Arrays.sort(ans);
+        return ans[l-1];
+        
     }
 }
