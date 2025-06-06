@@ -1,61 +1,34 @@
 class Solution {
-
-    // KMP algorithm to search pattern in text
     ArrayList<Integer> search(String pat, String txt) {
-        ArrayList<Integer> res = new ArrayList<>();
-        int m = pat.length();
-        int n = txt.length();
-
-        // Step 1: Compute the longest prefix-suffix (LPS) array for the pattern
-        int[] lps = computeLPSArray(pat);
-
-        // Step 2: Perform the KMP search
-        int i = 0;  // Index for txt
-        int j = 0;  // Index for pat
-        while (i < n) {
-            if (pat.charAt(j) == txt.charAt(i)) {
+        // Code here
+        int[] pattern=new int[pat.length()+1];
+        for(int i=1,s=0;i<pat.length();){
+            if(pat.charAt(i)==pat.charAt(s)){
+                pattern[i]=++s;
                 i++;
-                j++;
-            }
-
-            if (j == m) {
-                // Pattern found, add the index (1-based indexing)
-                res.add(i - j );
-                j = lps[j - 1];  // Use the LPS array to avoid unnecessary comparisons
-            } else if (i < n && pat.charAt(j) != txt.charAt(i)) {
-                // Mismatch after j matches
-                if (j != 0) {
-                    j = lps[j - 1];  // Use the LPS array to skip characters
-                } else {
-                    i++;
-                }
-            }
+            }else if(s>0) s=pattern[s-1];
+            else i++;
         }
-        return res;
-    }
-
-    // Compute the Longest Prefix Suffix (LPS) array for pattern
-    private int[] computeLPSArray(String pat) {
-        int m = pat.length();
-        int[] lps = new int[m];
-        int length = 0;  // Length of the previous longest prefix suffix
-        int i = 1;
         
-        // Build the LPS array
-        while (i < m) {
-            if (pat.charAt(i) == pat.charAt(length)) {
-                length++;
-                lps[i] = length;
-                i++;
-            } else {
-                if (length != 0) {
-                    length = lps[length - 1];  // Try the previous longest prefix suffix
-                } else {
-                    lps[i] = 0;
-                    i++;
+        ArrayList<Integer> list=new ArrayList<>();
+        
+        for(int i=0,s=0;i<txt.length();i++){
+            if(txt.charAt(i)==pat.charAt(s)) s++;
+            else{
+                while(s>0){
+                    s=pattern[s-1];
+                    if(txt.charAt(i)==pat.charAt(s)){
+                        s++;
+                        break;
+                    }
                 }
             }
+            if(s==pat.length()){
+                list.add(i-s+2);
+                s=pattern[s-1];
+            }
         }
-        return lps;
+        
+        return list;
     }
 }
