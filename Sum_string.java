@@ -1,34 +1,48 @@
-class Solution{
-    public String calSum(String s1, String s2){
-        StringBuilder sb = new StringBuilder();
-        int i=s1.length()-1, j=s2.length()-1, sum=0, carry=0, rem=0;
-        
-        while(i>=0 || j>=0 || carry==1){
-            sum = (i>=0?s1.charAt(i)-'0':0)+(j>=0?s2.charAt(j)-'0':0)+carry;
-            rem = sum%10;
-            i--; j--;
-            carry = sum/10;
-            sb.append(rem);
-        }
-        sb.reverse();
-        return sb.toString();
-    }
-    public boolean rec(String s1,String s2,String S){
-        if(S.isEmpty()) return true;
-        String sum=calSum(s1,s2);
-        if(S.startsWith(sum)) return rec(s2,sum,S.substring(sum.length()));
-        return false;
-    }
-    public int isSumString(String S){
+import java.math.BigInteger;
+class Solution {
+    public boolean isSumString(String s) {
         // code here
-        int n = S.length();
-        for (int i=1;i<n-2;i++){
-            for (int j=i+1;j<n-1;j++) {
-                String s1=S.substring(0,i),s2=S.substring(i,j);
-                if(rec(s1,s2,S.substring(j))) return 1;
+       int n = s.length();
+
+        
+        for (int len1 = 1; len1 <= n - 2; len1++) {
+            for (int len2 = 1; len1 + len2 <= n - 1; len2++) {
+
+               
+                if ((s.charAt(0) == '0' && len1 > 1) ||
+                    (s.charAt(len1) == '0' && len2 > 1)) {
+                    continue;
+                }
+
+                if (isValidSplit(s, len1, len2)) {
+                    return true;
+                }
             }
         }
-        return 0;
+        return false;
+    }
+
+   
+    private boolean isValidSplit(String s, int len1, int len2) {
+
+        BigInteger first  = new BigInteger(s.substring(0, len1));
+        BigInteger second = new BigInteger(s.substring(len1, len1 + len2));
+        int pos = len1 + len2;
+
+        while (pos < s.length()) {
+            BigInteger sum = first.add(second);
+            String sumStr = sum.toString();
+
+           
+            if (!s.startsWith(sumStr, pos)) {
+                return false;
+            }
+
+            
+            pos   += sumStr.length();
+            first  = second;
+            second = sum;
+        }
+        return true;        
     }
 }
-
