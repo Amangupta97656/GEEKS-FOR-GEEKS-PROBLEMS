@@ -1,56 +1,25 @@
 class Solution {
-    int binarySearch(int[] arr, int low, int high, int x) {
-        while(low <= high) {
-            int mid = low + (high - low) / 2;
-            if(arr[mid] == x)
-                return mid;
-            else if(arr[mid] < x)
-                low = mid + 1;
-            else
-                high = mid - 1;
-        }
-        
-        return low;
-    }
+    int[] printKClosest(int[] arr, int k, int x) {
+     PriorityQueue<int[]> pq = new PriorityQueue<>(
+    (a, b) -> a[0] != b[0] ? a[0] - b[0] : b[1] - a[1]
+);
+
+      int n=arr.length;
+      for(int i=0;i<n;i++){
+          if(arr[i]!=x){
+              pq.add(new int[]{Math.abs(arr[i]-x),arr[i]});
+          }
+      }
+      
+      int[] ans=new int[k];
+      int index=0;
+      while(!pq.isEmpty() && k>0){
+          int[] curr=pq.poll();
+          ans[index]=curr[1];
+          index++;
+          k--;
+      }
     
-    int[] printKClosest(int[] arr, int n, int k, int x) {
-        int position = binarySearch(arr, 0, n - 1, x);
-        int left = position - 1, right = position, i = 0;
-        int[] res = new int[k];
-        
-        if(right < n && arr[right] == x)
-            right++;
-        
-        while(k > 0 && left >= 0 && right < n) {
-            int leftDiff = Math.abs(arr[left] - x);
-            int rightDiff = Math.abs(arr[right] - x);
-            
-            if(leftDiff < rightDiff) 
-                res[i++] = arr[left--];
-            
-            else if(leftDiff > rightDiff) 
-                res[i++] = arr[right++];
-            
-            else {
-                if(arr[right] > arr[left]) 
-                    res[i++] = arr[right++];
-                else 
-                    res[i++] = arr[left--];
-            }
-            
-            k--;
-        }
-        
-        while(k > 0 && left >= 0) {
-            res[i++] = arr[left--];
-            k--;
-        }
-        
-        while(k > 0 && right < n) {
-            res[i++] = arr[right++];
-            k--;
-        }
-            
-        return res;
+      return ans;
     }
 }
