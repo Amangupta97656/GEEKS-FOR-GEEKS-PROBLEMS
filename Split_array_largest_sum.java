@@ -1,28 +1,44 @@
 class Solution {
-    static int bs(int arr[],int divSum){
-        int ndiv=1,cs=0;
-        for(int i:arr){
-            if(cs+i<=divSum) cs+=i;
-            else{
-                ndiv++;
-                cs=i;
+    public int splitArray(int[] arr, int k) {
+        int maxElem=arr[0]; int totalsum=0;
+        for(int a:arr){
+            maxElem=Math.max(maxElem,a);
+            totalsum+=a;
+        }
+        
+        int result=0;
+        int l=maxElem;
+        int r=totalsum;
+        
+        while(l<=r){
+            int mid=l+(r-l)/2;
+            
+            if(isValid(mid,arr,k)){
+                result=mid;
+                r=mid-1;
+            }else{
+                l=mid+1;
             }
         }
-        return ndiv;
+        
+        return result;
     }
-    static int splitArray(int[] arr , int N, int K) {
-        // code here
-        int l=Integer.MIN_VALUE,r=0;
-        for(int i:arr){
-            l=Math.max(l,i);
-            r+=i;
+    
+    private boolean isValid(int target,int[] arr,int k){
+        int sum=0,count=1;
+        
+        for(int i=0;i<arr.length;i++){
+            if (arr[i] > target) {
+                return false;
+            }
+            
+            sum+=arr[i];
+            if(sum>target){
+                sum=arr[i];
+                count++;
+            }
         }
-        while(l<=r){
-            int mid=(l+r)/2;
-            int curr=bs(arr,mid);
-            if(curr>K) l=mid+1;
-            else r=mid-1;
-        }
-        return l;
+        
+        return count<=k;
     }
-};
+}
