@@ -1,24 +1,37 @@
 class Solution {
-    static int longestSubarray(int[] arr, int k) {
-        // Code Here
-        Map<Integer,Integer> PrefixMap = new HashMap<>();
-        PrefixMap.put(0,-1);
-        int prefixSum =0,maxLen=0;
-        for(int i=0;i<arr.length;i++)
-        {
-            prefixSum +=(arr[i]>k)?1:-1;
-            if(prefixSum >0)
-            {
-                maxLen = i+1;
-            }else
-            {
-                if(PrefixMap.containsKey(prefixSum -1))
-                {
-                    maxLen = Math.max(maxLen,i-PrefixMap.get(prefixSum -1));
+    public int totalElements(int[] arr) {
+            int i=0;
+            int j=0;
+            int n=arr.length;
+            int ans=0;
+            HashMap<Integer,Integer> map=new HashMap<>();
+            while(j<n){
+                map.put(arr[j], map.getOrDefault(arr[j],0)+1);
+                if(map.size()<2){
+                    j++;
+                }else if(map.size()==2){
+                    int k=j-i+1;
+                    ans=Math.max(ans,k);
+                    j++;
+                }else {
+                    while(i<j && j<n && map.size()>2){
+                        int temp=arr[i];
+                        if(map.get(temp)>1){
+                            map.put(temp, map.get(temp)-1);
+                        }else {
+                            map.remove(temp);
+                        }
+                        i++;
+                    }
+                    
+                    if(map.size()==2){
+                        int k=j-i+1;
+                        ans=Math.max(ans,k);
+                    }
+                    j++;
                 }
             }
-            PrefixMap.putIfAbsent(prefixSum,i);
-        }
-        return maxLen;
+             if(map.size()==1)return map.get(arr[0]);
+             else  return ans;
     }
 }
