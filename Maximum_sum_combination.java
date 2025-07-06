@@ -1,30 +1,29 @@
 class Solution {
-    static List<Integer> maxCombinations(int N, int K, int A[], int B[]) {
+    public ArrayList<Integer> topKSumPairs(int[] A, int[] B, int K) {
         // code here
-        List<Integer> ans = new ArrayList<>();
+        int N = A.length;
+        ArrayList<Integer> list=new ArrayList<>();
         Arrays.sort(A);
         Arrays.sort(B);
-        
-        Queue<int[]> pq = new PriorityQueue<>((o1,o2)->(o2[0]-o1[0]));
-        pq.add(new int[]{B[N-1]+A[N-1],N-1,N-1});
-        
-        while(!pq.isEmpty() && K>0)
-        {
-            int x[] = pq.poll();
-            ans.add(x[0]);
-            if(x[1]==N-1 && x[2]-1>=0)
-            {
-                pq.add(new int[]{B[x[2]-1]+A[N-1],N-1,x[2]-1});
+        PriorityQueue<Integer> pq=new PriorityQueue<>();
+    
+         for(int i=N-1;i>N-1-K;i--){
+            for(int j=N-1;j>N-1-K;j--){
+            int sum=A[i]+B[j];
+            if(pq.size()<K){
+                pq.add(sum);
             }
-            
-            if(x[1]-1>=0)
-            {
-                pq.add(new int[]{B[x[2]]+A[x[1]-1],x[1]-1,x[2]});
+            else if(sum>pq.peek()){
+                pq.poll();
+                pq.add(sum);
             }
-            K--;
-            
+            else break;
         }
-        
-        return ans;
     }
+    
+    while(pq.size()>0){
+        list.add(0,pq.poll());
+    }
+    return list;
+  }
 }
