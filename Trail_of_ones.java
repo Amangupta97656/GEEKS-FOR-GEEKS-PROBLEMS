@@ -1,15 +1,36 @@
 class Solution {
-    static int numberOfConsecutiveOnes(int n) {
-        int MOD = 1_000_000_007;
-        int[][] dp = new int[n + 1][3];
-        dp[2][0] = 2;
-        dp[2][1] = 1; 
-        dp[2][2] = 1;
-        for (int i = 3; i <= n; i++) {
-            dp[i][0] = (dp[i - 1][0] + dp[i - 1][1]) % MOD;
-            dp[i][1] = dp[i - 1][0];
-            dp[i][2] = ((2 * dp[i - 1][2]) % MOD + dp[i - 1][1]) % MOD;
+    
+    int fun(int i, int prev, int n, int[][] dp){
+        if(i == n-1) return 1;
+        
+        if(dp[i][prev] != -1) return dp[i][prev];
+        
+        if(prev == 0){
+            dp[i][prev] = fun(i+1, 0, n, dp) + fun(i+1, 1, n, dp);
         }
-        return dp[n][2];
+        else{
+            dp[i][prev] = fun(i+1, 0, n, dp);
+        }
+        
+        return dp[i][prev];
+        
     }
-}
+    
+    
+    public int countConsec(int n) {
+        // code here
+        
+        int i, j;
+        
+        int first = 0;
+        int second = 1;
+        
+        for(i=2; i <= n+2; i++){
+            int c = first + second;
+            first = second;
+            second = c;
+        }
+        
+        return (1<<n) - second;
+        
+    }
