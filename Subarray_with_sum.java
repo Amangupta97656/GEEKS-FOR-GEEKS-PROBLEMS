@@ -1,17 +1,20 @@
 class Solution {
-    public int countSubarrays(int arr[], int k) {
-       int count = 0;
+    public int cntSubarrays(int[] arr, int k) {
+        HashMap<Integer, Integer> prefixSumMap = new HashMap<>();
+        
+        int count = 0;
+        int prefixSum = 0;
+        prefixSumMap.put(0, 1);
 
-HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
-       int arrSum =0;
-       map.put(0,1);
-       for(int num : arr){
-           arrSum+=num;
-           if(map.containsKey(arrSum-k)){
-               count += map.get(arrSum-k);
-           }
-           map.put(arrSum,map.getOrDefault(arrSum,0)+1);
-       }
-       return count;
+        for (int num : arr) {
+            prefixSum += num;
+            if (prefixSumMap.containsKey(prefixSum - k)) {
+                count += prefixSumMap.get(prefixSum - k);
+            }
+            prefixSumMap.put(prefixSum, prefixSumMap.getOrDefault(prefixSum, 0) + 1);
+        }
+
+        return count;
     }
 }
+
