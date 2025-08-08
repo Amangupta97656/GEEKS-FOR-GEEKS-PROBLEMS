@@ -1,21 +1,31 @@
 class Solution {
-    int lps(String str) {
-        // code here
-        int n=str.length();
-        int p=0,s=1,cnt=0,pos=0;
-        while(p<n&&s<n){
-            if(str.charAt(p)==str.charAt(s)){
-                p++;
-                s++;
-                cnt++;
-            }
-            else{
-                pos++;
-                s=pos;
-                cnt=0;
-                p=0;
+    public static int getLPSLength(String s) {
+        int n = s.length();
+        int[] lps = new int[n];
+        int len = 0; 
+        int i = 1;
+
+        while (i < n) {
+            if (s.charAt(i) == s.charAt(len)) {
+                len++;
+                lps[i] = len;
+                i++;
+            } else {
+                if (len != 0) {
+                    len = lps[len - 1];
+                } else {
+                    lps[i] = 0;
+                    i++;
+                }
             }
         }
-        return cnt;
+
+        return lps[n - 1]; 
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getLPSLength("abab"));        
+        System.out.println(getLPSLength("aabcdaabc"));   
+        System.out.println(getLPSLength("aaaa"));        
     }
 }
