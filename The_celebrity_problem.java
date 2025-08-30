@@ -1,19 +1,25 @@
 class Solution {
-    public int celebrity(int[][] mat) {
-        int n = mat.length, j = 0;
-      // j= 0 , means assuming first person as celebrity
+    public int celebrity(int mat[][]) {
+        int ans=-1,j=0,n=mat.length;
+        
         for(int i=0;i<n;i++){
-      // if j knows i , means that i might be the celebrity 
-            if(knows(mat, j , i)) j = i;
+            // checking for Celebrity if it doesn't know anyone.
+            for(j=0;j<n;j++){
+                if(i!=j && mat[i][j]==1)break;
+            }
+            
+            if(j==n){ // means it could be a Celebrity 
+                for(j=0;j<n;j++){
+                    if(i!=j && mat[j][i]==0)break; // means someone doesn't know this i'th Celebrity 
+                }
+                if(j==n){ // means every one knows the it'h Celebrity
+                    ans=i;
+                    break;
+                } 
+                
+            }
         }
-       // j is celebrity only if j does not know i or every other person know j
-        for(int i=0;i<n;i++){
-            if(j != i && (knows(mat, j, i) || !knows(mat, i, j))) return -1;
-        }
-        return j;
-    }
-   // to check whether a knows b or not
-    private boolean knows(int[][] m, int a, int b){
-        return m[a][b] == 1;
+        
+        return ans;
     }
 }
