@@ -1,20 +1,23 @@
 class Solution {
 
     public int maxWater(int arr[]) {
-        // Code Here
-         int i=0,j=arr.length-1;
-        int max=0;
-        while(i<j){
-           int min=Math.min(arr[i],arr[j]);
-           max=Math.max(max,(min * (j-i)));
-           if(arr[i]<arr[j]){
-               i++;
-           }else{
-               j--;
-           }
-          
-       }
-       return max;
-    }
-}
+    int left = 0;
+    int right = arr.length - 1;
+    int maxArea = 0;
 
+    while (left < right) {
+
+      int area =Math.min(arr[left], arr[right]) * (right - left);
+
+      maxArea = Math.max(area, maxArea);
+
+      if (arr[left] < arr[right])
+        left++;
+      else
+        right--;
+    }
+
+    return maxArea;
+  }
+
+}
