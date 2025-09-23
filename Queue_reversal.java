@@ -1,14 +1,11 @@
-class GfG{
-    //Function to reverse the queue.
-    public Queue<Integer> rev(Queue<Integer> q){
-        //add code here.
-        Stack<Integer> s = new Stack<>();
-        while (!q.isEmpty()) {
-            s.push(q.remove());
-        }
-        while (!s.isEmpty()) {
-            q.add(s.pop());
-        }
-        return q;
+class Solution {
+    public void reverseQueue(Queue<Integer> q) {
+        // code here
+        if (q.isEmpty()) return;
+        
+        Integer num = q.remove();
+        reverseQueue(q);
+        q.add(num);
     }
 }
+
