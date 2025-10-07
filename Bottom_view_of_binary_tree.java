@@ -1,39 +1,47 @@
-class Solution
-{
-    static class pair{
+class Solution {
+    
+    static class Pair {
         Node node;
-        int level;
-        public pair(Node node,int level){
-            this.node=node;
-            this.level=level;
+        int hd;  // horizontal distance
+        
+        Pair(Node node, int hd) {
+            this.node = node;
+            this.hd = hd;
         }
     }
-    //Function to return a list containing the bottom view of the given tree.
-    public ArrayList <Integer> bottomView(Node root)
-    {
-        // Code here
-        int leftMost=0;
-        HashMap<Integer,Integer> mp=new HashMap<>();
-        Queue<pair> q=new LinkedList<>();
-        q.offer(new pair(root,0));
-        while(!q.isEmpty()){
-            pair p=q.poll();
-            Node temp=p.node;
-            int lvl=p.level;
-            mp.put(lvl,temp.data);
-            leftMost=Math.min(leftMost,lvl);
-            if(temp.left!=null){
-                q.offer(new pair(temp.left,lvl-1));
+
+    public ArrayList<Integer> bottomView(Node root) {
+        ArrayList<Integer> result = new ArrayList<>();
+        if (root == null) return result;
+        
+        // Map to store the last (bottom-most) node at each horizontal distance
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        Queue<Pair> q = new LinkedList<>();
+        
+        q.add(new Pair(root, 0)); // root has horizontal distance 0
+        
+        while (!q.isEmpty()) {
+            Pair current = q.poll();
+            Node node = current.node;
+            int hd = current.hd;
+            
+            // For bottom view, we overwrite previous values for same hd
+            map.put(hd, node.data);
+            
+            // Add left and right children with updated horizontal distances
+            if (node.left != null) {
+                q.add(new Pair(node.left, hd - 1));
             }
-            if(temp.right!=null){
-                q.offer(new pair(temp.right,lvl+1));
+            if (node.right != null) {
+                q.add(new Pair(node.right, hd + 1));
             }
         }
-        ArrayList<Integer> ans=new ArrayList<>();
-        while(mp.containsKey(leftMost)){
-            ans.add(mp.get(leftMost));
-            leftMost++;
+        
+        // Extract values from the TreeMap in sorted order of horizontal distance
+        for (int val : map.values()) {
+            result.add(val);
         }
-        return ans;
+        
+        return result;
     }
 }
