@@ -1,23 +1,21 @@
 class Solution {
-    // Function to return maximum path sum from any node in a tree.
-    int findMaxSum(Node node) {
-        // your code goes here
-        if(node==null)return -10000;
-        int numSumLeft = count(node.left);
-        int numSumRight = count(node.right);
-        numSumLeft = numSumLeft<0?0:numSumLeft;
-        numSumRight = numSumRight<0?0:numSumRight;
-        int curr = node.data + numSumLeft + numSumRight;
-        int leftnode = findMaxSum(node.left);
-        int rightnode = findMaxSum(node.right);
-        return Math.max(curr,Math.max(leftnode,rightnode));
+    long max, min = Integer.MIN_VALUE;
+    int findMaxSum(Node root) {
+        // code here
+        max = (long)Integer.MIN_VALUE;
+        findMaxSum2(root);
+        return (int)max;
     }
+    long findMaxSum2(Node root){
+        if(root == null){
+            return min;
+        }
+        long left = findMaxSum2(root.left);
+        long right = findMaxSum2(root.right);
+        
+        long max2 = Math.max((long)root.data,Math.max((long)root.data+left,(long)root.data+right));
+        max = Math.max(max,Math.max(max2,Math.max(left,Math.max(right,left+right+(long)root.data))));
     
-    public static int count(Node root){
-        if(root==null)return -10000;
-        int num = root.data;
-        int left = num + count(root.left);
-        int right = num + count(root.right);
-        return Math.max(num,Math.max(left,right));
+        return max2;
     }
 }
