@@ -1,23 +1,30 @@
-public static int solve(Node root, int[] moves){
-            if(root == null){
-                return 0;
-            }
-            
-            int left = solve(root.left, moves);
-            int right = solve(root.right, moves);
-            
-            moves[0] += Math.abs(left) + Math.abs(right);
-            
-            return root.data + left + right - 1;
-        }
+class Solution {
+    class Node2{
+        int sum, nodes;
         
-        public static int distributeCandy(Node root){
-            
-            // but we will have to avoid ourself from the use of global variables.
-            
-            int[] ans = new int[1];
-            
-             solve(root, ans);
-             
-             return ans[0];
+        Node2(int sum, int nodes){
+            this.sum = sum;
+            this.nodes = nodes;
         }
+    }
+    int count;
+    public int distCandy(Node root) {
+        // code here
+        count = 0;
+        countMoves(root);
+        return count;
+    }
+    public Node2 countMoves(Node root){
+        if(root == null) return new Node2(0,0);
+        
+        Node2 left = countMoves(root.left);
+        Node2 right = countMoves(root.right);
+        
+        int sum = left.sum+right.sum+root.data;
+        int nodes = left.nodes+right.nodes+1;
+        count += (Math.abs(sum - nodes));
+        
+        return new Node2(sum,nodes);
+    }
+}
+
