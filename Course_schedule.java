@@ -1,47 +1,48 @@
+import java.util.*;
+
 class Solution {
-    static int[] findOrder(int n, int m, ArrayList<ArrayList<Integer>> adj) {
-        
-        int[] ans = new int[n];
-        int ansIndex = 0;
+    public ArrayList<Integer> findOrder(int n, int[][] prerequisites) {
+        // Step 1: Build adjacency list
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++)
+            adj.add(new ArrayList<>());
+
+        for (int[] pre : prerequisites) {
+            adj.get(pre[1]).add(pre[0]); // y → x
+        }
+
+        // Step 2: Compute indegree
         int[] indegree = new int[n];
-        
-        ArrayList<ArrayList<Integer>> adjList = new ArrayList<>(n);
-
         for (int i = 0; i < n; i++) {
-            
-            adjList.add(new ArrayList<>());
+            for (int it : adj.get(i))
+                indegree[it]++;
         }
 
-        for (ArrayList<Integer> edge : adj) {
-            
-            int from = edge.get(1);
-            int to = edge.get(0);
-            adjList.get(from).add(to);
-            indegree[to]++;
-        }
-
+        // Step 3: Queue for Kahn’s algorithm
         Queue<Integer> q = new LinkedList<>();
         for (int i = 0; i < n; i++) {
-            if (indegree[i] == 0) {
+            if (indegree[i] == 0)
                 q.add(i);
-            }
         }
+
+        ArrayList<Integer> topo = new ArrayList<>();
 
         while (!q.isEmpty()) {
-            
-            int curr = q.poll();
-            ans[ansIndex++] = curr;
+            int node = q.poll();
+            topo.add(node);
 
-            for (int neighbor : adjList.get(curr)) {
-                indegree[neighbor]--;
-
-                if (indegree[neighbor] == 0) {
-                    q.add(neighbor);
-                }
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0)
+                    q.add(it);
             }
         }
 
-        return ansIndex == n ? ans : new int[0];
+        // Step 4: Check for cycle (if all nodes are processed)
+        if (topo.size() == n)
+            return topo;
+
+        // Else, return empty list (cycle detected)
+        return new ArrayList<>();
     }
 }
-
