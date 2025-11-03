@@ -1,6 +1,4 @@
 
-
-
 class Solution {
     static int knapsack(int W, int val[], int wt[]) {
         int dp[]=new int[W+1];
@@ -11,6 +9,7 @@ class Solution {
         
     }
 }
+
 
 
 
