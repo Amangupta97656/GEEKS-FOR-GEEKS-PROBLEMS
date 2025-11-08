@@ -1,5 +1,3 @@
-
-
 class Solution {
     public ArrayList<Integer> asciirange(String s) {
         int n=s.length();
@@ -21,3 +19,4 @@ class Solution {
     }
 
 }
+
