@@ -1,8 +1,5 @@
 
 
-
-
-
 class Solution 
 { 
       //Function to return max ' value that can be put in knapsack of capacity W.
