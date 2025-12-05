@@ -1,31 +1,48 @@
-class Solution{
-    int findMin(int[][]costs, int index, int parent, int K, int N, int[][]dp){
-        if(index == N){
-            return 0;
-        }
-        int min = Integer.MAX_VALUE;
-        for(int k = 0; k < K; k++){
-            if(k == parent){
-               continue;
-            }
-            int cost = 0;
-            if(dp[index][k] == -1){
-                cost = dp[index][k] = costs[index][k] + findMin(costs, index + 1, k, K, N, dp);
-                min = Math.min(cost, min);
-            }else{
-                min = Math.min(min, dp[index][k]);
-            }
-        }
-        return min;
-    }
-    int minCost(int [][] costs) {
+class Solution {
+    int minCost(int[][] costs) {
         int n = costs.length;
-		int k = costs[0].length;
-		int[][]dp = new int[n][k];
-        for(int row[] : dp){
-            Arrays.fill(row,-1);
-        } 
-		int ans = findMin(costs, 0, -1, k, n, dp);
-		return ans <= 0? -1 : ans;
+        if (n == 0) return 0;
+        
+        int k = costs[0].length;
+        if (k == 0) return -1;
+
+        // If only 1 color but more than 1 wall → impossible
+        if (k == 1 && n > 1) return -1;
+
+        // Track minimum and second minimum of previous row
+        int min1 = 0, min2 = 0, idx1 = -1;
+
+        for (int i = 0; i < n; i++) {
+            int newMin1 = Integer.MAX_VALUE;
+            int newMin2 = Integer.MAX_VALUE;
+            int newIdx1 = -1;
+
+            for (int j = 0; j < k; j++) {
+
+                int cost = costs[i][j];
+                if (j == idx1) {
+                    // cannot use the previous minimum (same color)
+                    cost += min2;
+                } else {
+                    cost += min1;
+                }
+
+                // Update new minimums for current row
+                if (cost < newMin1) {
+                    newMin2 = newMin1;
+                    newMin1 = cost;
+                    newIdx1 = j;
+                } else if (cost < newMin2) {
+                    newMin2 = cost;
+                }
+            }
+
+            // update for next row
+            min1 = newMin1;
+            min2 = newMin2;
+            idx1 = newIdx1;
+        }
+
+        return min1;
     }
 }
