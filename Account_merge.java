@@ -2,6 +2,7 @@
 
 
 
+
 class DisjointSet{
     int parent[];
     int size[];
